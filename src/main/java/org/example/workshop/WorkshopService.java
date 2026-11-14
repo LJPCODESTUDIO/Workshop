@@ -32,7 +32,7 @@ public class WorkshopService {
     }
 
     public List<WorkshopResponse> findByCategory(String category) {
-        return repository.findbyCategoryIgnoreCaseOrderByIdAsc(category)
+        return repository.findByCategoryIgnoreCaseOrderByIdAsc(category)
             .stream()
             .map(WorkshopResponse::from)
             .toList();
@@ -59,7 +59,7 @@ public class WorkshopService {
     @Transactional
     public Optional<WorkshopResponse> update(long id, WorkshopRequest request) {
 
-        Optional<Workshop> result = repositiry.findById(id);
+        Optional<Workshop> result = repository.findById(id);
 
         if (result.isEmpty()) {
             return Optional.empty();

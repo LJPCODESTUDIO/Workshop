@@ -29,11 +29,6 @@ public class WorkshopController {
 
         return service.findByCategory(category);
     }
-    
-    @GetMapping
-    public List<WorkshopResponse> getWorkshops() {
-        return service.findAll();
-    }
 
     @GetMapping("/{id}")
     public WorkshopResponse getById(@PathVariable long id) {
