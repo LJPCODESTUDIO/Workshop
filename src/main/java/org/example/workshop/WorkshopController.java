@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/workshops")
@@ -16,6 +17,19 @@ public class WorkshopController {
     }
 
     // GET requests
+
+    //Get all workshops or filter by category
+    @GetMapping
+    public List<WorkshopResponse> getWorkshops(
+        @RequestParam(required = false) String category) {
+
+        if (category == null) {
+            return service.findAll();
+        }
+
+        return service.findByCategory(category);
+    }
+    
     @GetMapping
     public List<WorkshopResponse> getWorkshops() {
         return service.findAll();
@@ -31,5 +45,35 @@ public class WorkshopController {
     public ResponseEntity<WorkshopResponse> createBook(@RequestBody WorkshopRequest request) {
         WorkshopResponse saved = service.add(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    //Pull requests
+
+    //Update an existing workshop
+    @PutMapping("/{id}")
+    public ResponseEntity<WorkshopResponse> updateWorkshop(
+            @PathVariable long id,
+            @RequestBody WorkshopRequest request) {
+
+        Optional<WorkshopResponse> updated = service.update(id, request);
+
+        if (updated.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updated.get());
+    }
+
+    //Delete an existing workshop
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkshop(@PathVariable Long id) {
+
+        boolean deleted = service.delete(id);
+
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
