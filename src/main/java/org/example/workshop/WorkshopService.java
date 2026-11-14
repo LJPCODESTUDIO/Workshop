@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,6 +31,13 @@ public class WorkshopService {
                 .orElseThrow(() -> new WorkshopNotFoundException(id));
     }
 
+    public List<WorkshopResponse> findByCategory(String category) {
+        return repository.findbyCategoryIgnoreCaseOrderByIdAsc(category)
+            .stream()
+            .map(WorkshopResponse::from)
+            .toList();
+    }
+
     // Setters
     @Transactional
     public WorkshopResponse add(WorkshopRequest request) {
@@ -45,5 +53,43 @@ public class WorkshopService {
                 request.capacity());
 
         return WorkshopResponse.from(repository.save(workshop));
+    }
+
+    //Update a workshop
+    @Transactional
+    public Optional<WorkshopResponse> update(long id, WorkshopRequest request) {
+
+        Optional<Workshop> result = repositiry.findById(id);
+
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Workshop workshop = result.get();
+
+        workshop.setTitle(request.title());
+        workshop.setCategory(request.category());
+        workshop.setPresenter(request.presenter());
+        workshop.setDurationMinutes(request.durationMinutes());
+        workshop.setCapacity(request.capacity());
+
+        Workshop updatedWorkshop = repository.save(workshop);
+
+        return Optional.of(WorkshopResponse.from(updatedWorkshop));
+    }
+
+    //Delete a workshop
+    @Transactional
+    public boolean delete(long id) {
+
+        Optional<Workshop> result = repository.findById(id);
+
+        if (result.isEmpty()) {
+            return false;
+        }
+
+        repository.delete(result.get());
+
+        return true;
     }
 }
