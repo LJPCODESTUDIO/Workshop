@@ -3,11 +3,9 @@ package org.example.workshop.error;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -56,5 +54,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .toList();
 
         return handleExceptionInternal(ex, withFieldErrors(ex.getBody(), errors), headers, status, request);
+    }
+
+    @ExceptionHandler(DuplicateWorkshopException.class)
+    public ProblemDetail handleDuplicateWorkshop(DuplicateWorkshopException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Duplicate Workshop");
+        return problem;
+    }
+
+    @ExceptionHandler(WorkshopNotFoundException.class)
+    public ProblemDetail handleWorkshopNotFound(WorkshopNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Workshop not found");
+        problem.setProperty("id", ex.getWorkshopId());
+        return problem;
     }
 }
