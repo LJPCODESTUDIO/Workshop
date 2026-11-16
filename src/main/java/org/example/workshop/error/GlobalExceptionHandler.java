@@ -4,7 +4,6 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -70,11 +69,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problem.setTitle("Workshop not found");
         problem.setProperty("id", ex.getWorkshopId());
         return problem;
-    }
-
-    @ExceptionHandler(WorkshopNotFoundException.class)
-    public ResponseEntity<Void> handleWorkshopNotFound(WorkshopNotFoundException ex) {
-        
-        return ResponseEntity.notFound().build();
     }
 }
