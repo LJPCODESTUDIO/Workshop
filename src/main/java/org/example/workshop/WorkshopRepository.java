@@ -7,4 +7,6 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
     boolean existsByTitleIgnoreCaseAndCategoryIgnoreCaseAndPresenterIgnoreCase(String title, String category, String presenter);
 
     List<Workshop> findByCategoryIgnoreCaseOrderByIdAsc(String category);
+    List<Workshop> findByPresenterIgnoreCaseOrderByIdAsc(String presenter);
+    List<Workshop> findByTitleContainingIgnoreCaseOrderByIdAsc(String title);
 }

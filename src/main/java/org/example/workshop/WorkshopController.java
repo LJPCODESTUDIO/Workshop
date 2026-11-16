@@ -35,6 +35,18 @@ public class WorkshopController {
         return service.findById(id);
     }
 
+    @GetMapping("/search")
+    public List<WorkshopResponse> searchForTitle(@RequestParam String title)
+    {
+        return service.searchByTitle(title);
+    }
+
+    @GetMapping("/by-presenter")
+    public List<WorkshopResponse> getByPresenter(@RequestParam String presenter)
+    {
+        return service.findByPresenter(presenter);
+    }
+
     // POST requests
     @PostMapping
     public ResponseEntity<WorkshopResponse> createBook(@RequestBody WorkshopRequest request) {

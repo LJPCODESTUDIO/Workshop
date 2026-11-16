@@ -33,9 +33,23 @@ public class WorkshopService {
 
     public List<WorkshopResponse> findByCategory(String category) {
         return repository.findByCategoryIgnoreCaseOrderByIdAsc(category)
-            .stream()
-            .map(WorkshopResponse::from)
-            .toList();
+                .stream()
+                .map(WorkshopResponse::from)
+                .toList();
+    }
+
+    public List<WorkshopResponse> searchByTitle(String title)
+    {
+        return repository.findByTitleContainingIgnoreCaseOrderByIdAsc(title)
+                .stream().map(WorkshopResponse::from).toList();
+    }
+
+    public List<WorkshopResponse> findByPresenter(String presenter)
+    {
+        return repository.findByPresenterIgnoreCaseOrderByIdAsc(presenter)
+                .stream()
+                .map(WorkshopResponse::from)
+                .toList();
     }
 
     // Setters
